@@ -1,3 +1,6 @@
+# tools/php-cs-fixer
+.php-cs-fixer.cache
+
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -6,7 +9,7 @@
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
-/vendor/
+vendor
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
