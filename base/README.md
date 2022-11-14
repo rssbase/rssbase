@@ -1,8 +1,11 @@
 # RssBase
 
+![main branch status](https://img.shields.io/github/checks-status/rssbase/rssbase/main)
+![repo size](https://img.shields.io/github/size/rssbase/rssbase/base)
+
 ## Requirements
 
-- [PHP](https://www.php.net/downloads.php) `>= 8.1` & [composer](https://getcomposer.org/download/) `>= 2.0`
+- [PHP](https://www.php.net/downloads.php) `>= 8.1` & [composer](https://getcomposer.org/download/) `>= 2.4`
 
 ## Development
 
