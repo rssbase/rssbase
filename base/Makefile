@@ -21,6 +21,9 @@ clean: ## Remove generated files
 cs: ## Run php-cs-fixer
 	tools/php-cs-fixer/bin -v
 
+psalm: ## Run psalm
+	tools/psalm/bin
+
 rector: ## Run rector
 	tools/rector/bin -v
 
