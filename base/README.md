@@ -18,6 +18,8 @@ clean                          Remove generated files
 
 # Utils
 cs                             Run php-cs-fixer
+phpstan                        Run phpstan
+psalm                          Run psalm
 rector                         Run rector
 
 # Tests
