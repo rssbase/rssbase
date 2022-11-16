@@ -21,6 +21,7 @@ cs                             Run php-cs-fixer
 phpstan                        Run phpstan
 psalm                          Run psalm
 rector                         Run rector
+twigcs                         Run twigcs
 
 # Tests
 tests                          Run all tests

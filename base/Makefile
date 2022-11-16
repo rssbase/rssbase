@@ -30,6 +30,9 @@ psalm: ## Run psalm
 rector: ## Run rector
 	tools/rector/bin -v
 
+twigcs: ## Run twigcs
+	tools/twigcs/bin
+
 ##
 ### Tests
 
