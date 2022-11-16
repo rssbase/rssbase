@@ -1,0 +1,12 @@
+#!/bin/env bash
+set -eou pipefail
+if [ "${1:-}" == '-d' ] || [ "${1:-}" == '--debug' ]; then
+    set -x
+    shift
+fi
+
+ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+BIN="vendor/bin/phpstan"
+
+make "${BIN}" --quiet --directory="${ROOT}"
+exec "${ROOT}/${BIN}" analyse --configuration "${ROOT}/config.neon" "$@"
