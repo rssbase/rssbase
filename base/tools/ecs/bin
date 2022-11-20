@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 set -eou pipefail
 if [ "${1:-}" == '-d' ] || [ "${1:-}" == '--debug' ]; then
     set -x
@@ -6,7 +6,7 @@ if [ "${1:-}" == '-d' ] || [ "${1:-}" == '--debug' ]; then
 fi
 
 ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-BIN="vendor/bin/php-cs-fixer"
+BIN="vendor/bin/ecs"
 
 make "${BIN}" --quiet --directory="${ROOT}"
-exec "${ROOT}/${BIN}" fix --config="${ROOT}/config.php" "$@"
+exec "${ROOT}/${BIN}" --config=${ROOT}/config.php "$@"

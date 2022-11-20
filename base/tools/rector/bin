@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 set -eou pipefail
 if [ "${1:-}" == '-d' ] || [ "${1:-}" == '--debug' ]; then
     set -x

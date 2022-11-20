@@ -1,9 +1,7 @@
-vendor/bin/php-cs-fixer: vendor
-
 vendor: composer.lock
-	composer install
+	@composer install --optimize-autoloader
 	@touch -f $@
 
 composer.lock: composer.json
-	composer update
+	@composer update
 	@touch -f $@

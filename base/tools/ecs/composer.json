@@ -1,0 +1,11 @@
+{
+    "require": {
+        "slevomat/coding-standard": "^8.6",
+        "symplify/easy-coding-standard": "^11.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false
+        }
+    }
+}

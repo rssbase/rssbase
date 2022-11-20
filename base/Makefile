@@ -15,23 +15,9 @@ clean: ## Remove generated files
 		var/cache/* \
 		var/log/*
 
-##
-### Utils
-
-cs: ## Run php-cs-fixer
-	tools/php-cs-fixer/bin -v
-
-phpstan: ## Run phpstan
-	tools/phpstan/bin
-
-psalm: ## Run psalm
-	tools/psalm/bin
-
-rector: ## Run rector
-	tools/rector/bin -v
-
-twigcs: ## Run twigcs
-	tools/twigcs/bin
+kill:
+	docker compose kill
+	docker compose rm --force
 
 ##
 ### Tests
@@ -47,6 +33,25 @@ tu: vendor
 tf: ## Run functional tests
 tf: vendor
 	bin/phpunit --group functional
+
+##
+### Utils
+
+ecs: ## Run ecs     -- https://github.com/symplify/easy-coding-standard
+	@tools/ecs/bin --fix
+
+phpstan: ## Run phpstan -- https://phpstan.org
+	@tools/phpstan/bin
+
+psalm: ## Run psalm   -- https://psalm.dev
+	@tools/psalm/bin
+
+rector: ## Run rector  -- https://getrector.org
+	@tools/rector/bin -v
+
+twigcs: ## Run twigcs  -- https://github.com/friendsoftwig/twigcs
+	@tools/twigcs/bin
+
 
 #
 # Logical creation based on files
