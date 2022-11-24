@@ -1,7 +1,7 @@
 # RssBase
 
 ![main branch status](https://img.shields.io/github/checks-status/rssbase/rssbase/main)
-![repo size](https://img.shields.io/github/size/rssbase/rssbase/base)
+![repo size](https://img.shields.io/github/repo-size/rssbase/rssbase)
 
 ## Requirements
 
