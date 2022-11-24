@@ -9,6 +9,7 @@
 declare(strict_types=1);
 
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
 use Symplify\CodingStandard\Fixer\Naming\StandardizeHereNowDocKeywordFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
@@ -34,16 +35,14 @@ return static function (ECSConfig $ecsConfig): void {
 
     $ecsConfig->parallel();
 
-    $ecsConfig->ruleWithConfiguration(
-        HeaderCommentFixer::class,
-        [
-            'location' => 'after_open',
-            'comment_type' => HeaderCommentFixer::HEADER_COMMENT,
-            'header' => <<<COPYRIGHT
-                This file is part of the RssBase project.
-                Copyright (c) Romain Gautier <romain@rssbase.io>
-                This source code is distributed under the terms of both the MIT license and the Apache License (v2.0).
-                COPYRIGHT
-        ]
-    );
+    $ecsConfig->ruleWithConfiguration(YodaStyleFixer::class, []);
+    $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, [
+        'location' => 'after_open',
+        'comment_type' => HeaderCommentFixer::HEADER_COMMENT,
+        'header' => <<<COPYRIGHT
+            This file is part of the RssBase project.
+            Copyright (c) Romain Gautier <romain@rssbase.io>
+            This source code is distributed under the terms of both the MIT license and the Apache License (v2.0).
+            COPYRIGHT
+    ]);
 };
