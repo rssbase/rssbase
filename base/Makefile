@@ -1,5 +1,29 @@
+# This file is part of the RssBase project.
+# Copyright (c) Romain Gautier <romain@rssbase.io>
+# This source code is distributed under the terms of both the MIT license and the Apache License (v2.0).
+
+SHELL := bash
+.ONESHELL:
+.SHELLFLAGS := -eu -o pipefail -c
+.DELETE_ON_ERROR:
+MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --no-builtin-rules
+
+DC = docker compose
+
 ##
 ### Project
+
+kill:
+	$(DC) kill
+	$(DC) rm --force
+
+build:
+	cd ../docker
+	make dev --no-print-directory
+
+start:
+	$(DC) up --detach
 
 .PHONY: install
 install: ## Install project dependencies
@@ -14,10 +38,6 @@ clean: ## Remove generated files
 		tools/*/vendor \
 		var/cache/* \
 		var/log/*
-
-kill:
-	docker compose kill
-	docker compose rm --force
 
 ##
 ### Tests

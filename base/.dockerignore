@@ -1,0 +1,16 @@
+*
+.*
+
+!bin/console
+!config
+!public
+!src
+!templates
+
+!.env*
+.env.local
+.env.local.php
+.env.*.local
+
+!composer.*
+!symfony.lock
