@@ -9,18 +9,13 @@
 declare(strict_types=1);
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Config\FrameworkConfig;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->extension('framework', [
-        'router' => [
-            'utf8' => true,
-        ],
-    ]);
+return static function (FrameworkConfig $framework, ContainerConfigurator $containerConfigurator): void {
+    $router = $framework->router();
+    $router->utf8(true);
+
     if ('prod' === $containerConfigurator->env()) {
-        $containerConfigurator->extension('framework', [
-            'router' => [
-                'strict_requirements' => null,
-            ],
-        ]);
+        $router->strictRequirements(null);
     }
 };

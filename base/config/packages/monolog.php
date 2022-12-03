@@ -9,73 +9,70 @@
 declare(strict_types=1);
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Config\MonologConfig;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->extension('monolog', [
-        'channels' => ['deprecation'],
-    ]);
-    if ('dev' === $containerConfigurator->env()) {
-        $containerConfigurator->extension('monolog', [
-            'handlers' => [
-                'main' => [
-                    'type' => 'stream',
-                    'path' => '%kernel.logs_dir%/%kernel.environment%.log',
-                    'level' => 'debug',
-                    'channels' => ['!event'],
-                ],
-                'console' => [
-                    'type' => 'console',
-                    'process_psr_3_messages' => false,
-                    'channels' => ['!event', '!doctrine', '!console'],
-                ],
-            ],
-        ]);
-    }
-    if ('test' === $containerConfigurator->env()) {
-        $containerConfigurator->extension('monolog', [
-            'handlers' => [
-                'main' => [
-                    'type' => 'fingers_crossed',
-                    'action_level' => 'error',
-                    'handler' => 'nested',
-                    'excluded_http_codes' => [404, 405],
-                    'channels' => ['!event'],
-                ],
-                'nested' => [
-                    'type' => 'stream',
-                    'path' => '%kernel.logs_dir%/%kernel.environment%.log',
-                    'level' => 'debug',
-                ],
-            ],
-        ]);
-    }
+return static function (MonologConfig $monolog, ContainerConfigurator $containerConfigurator): void {
+    $monolog->channels(['deprecation']);
+
     if ('prod' === $containerConfigurator->env()) {
-        $containerConfigurator->extension('monolog', [
-            'handlers' => [
-                'main' => [
-                    'type' => 'fingers_crossed',
-                    'action_level' => 'error',
-                    'handler' => 'nested',
-                    'excluded_http_codes' => [404, 405],
-                    'buffer_size' => 50,
-                ],
-                'nested' => [
-                    'type' => 'stream',
-                    'path' => 'php://stderr',
-                    'level' => 'debug',
-                    'formatter' => 'monolog.formatter.json',
-                ],
-                'console' => [
-                    'type' => 'console',
-                    'process_psr_3_messages' => false,
-                    'channels' => ['!event', '!doctrine'],
-                ],
-                'deprecation' => [
-                    'type' => 'stream',
-                    'channels' => ['deprecation'],
-                    'path' => 'php://stderr',
-                ],
-            ],
-        ]);
+        $mainHandler = $monolog->handler('main')
+            ->type('fingers_crossed')
+            ->actionLevel('error')
+            ->handler('nested')
+            ->bufferSize(50);
+
+        $mainHandler->excludedHttpCode()
+            ->code(404);
+        $mainHandler->excludedHttpCode()
+            ->code(405);
+
+        $monolog->handler('nested')
+            ->type('stream')
+            ->path('php://stderr')
+            ->level('debug')
+            ->formatter('monolog.formatter.json');
+
+        $monolog->handler('console')
+            ->type('console')
+            ->processPsr3Messages(false)
+            ->channels()
+            ->elements(['!event', '!doctrine']);
+
+        $monolog->handler('deprecation')
+            ->type('stream')
+            ->path('php://stderr')
+            ->channels()
+            ->elements(['deprecation']);
+    } elseif ('dev' === $containerConfigurator->env()) {
+        $monolog->handler('main')
+            ->type('stream')
+            ->path('%kernel.logs_dir%/%kernel.environment%.log')
+            ->level('debug')
+            ->channels()
+            ->elements(['!event']);
+
+        $monolog->handler('console')
+            ->type('console')
+            ->processPsr3Messages(false)
+            ->channels()
+            ->elements(['!event', '!doctrine', '!console']);
+    } elseif ('test' === $containerConfigurator->env()) {
+        $mainHandler = $monolog->handler('main');
+        $mainHandler
+            ->type('fingers_crossed')
+            ->actionLevel('error')
+            ->handler('nested')
+            ->channels()
+            ->elements(['!event']);
+
+        $mainHandler->excludedHttpCode()
+            ->code(404);
+        $mainHandler->excludedHttpCode()
+            ->code(405);
+
+        $monolog->handler('nested')
+            ->type('stream')
+            ->path('%kernel.logs_dir%/%kernel.environment%.log')
+            ->level('debug');
     }
 };

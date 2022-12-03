@@ -18,7 +18,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autoconfigure()
     ;
 
-    $services->load('App\\', __DIR__ . '/../src/')
+    $services
+        ->load(namespace: 'App\\', resource: __DIR__ . '/../src/')
         ->exclude([
             __DIR__ . '/../src/DependencyInjection/',
             __DIR__ . '/../src/Entity/',
