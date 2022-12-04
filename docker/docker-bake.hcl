@@ -5,45 +5,53 @@
  */
 
 group "default" {
-  targets = ["web-server"]
+  targets = ["tools", "webserver"]
 }
 
 // Special target: https://github.com/docker/metadata-action#bake-definition
 target "docker-metadata-action" {}
 
-target "web-server" {
-  dockerfile = "base.Dockerfile"
-  output     = ["type=docker"]
-  tags       = ["rssbase-web-server"]
-  target     = "web-server"
-}
-
 target "tools" {
   dockerfile = "base.Dockerfile"
-  output     = ["type=docker"]
-  tags       = ["rssbase-tools"]
+  tags       = ["rssbase/internal:tools"]
   target     = "tools"
 }
-
-target "dev-web-server" {
-  inherits = ["docker-metadata-action"]
-  contexts = {
-    source-code = "../base/"
-    web-server  = "target:web-server"
-  }
-  dockerfile = "dev.Dockerfile"
-  tags       = ["rssbase-dev-web-server"]
-  target     = "dev-web-server"
+target "webserver" {
+  dockerfile = "base.Dockerfile"
+  tags       = ["rssbase/internal:webserver"]
+  target     = "webserver"
 }
 
-target "prod-web-server" {
-  inherits = ["docker-metadata-action"]
+# dev
+target "devtools" {
+  contexts = {
+    files = "./files"
+    tools = "target:tools"
+  }
+  dockerfile = "dev.Dockerfile"
+  output     = ["type=docker"]
+  tags       = ["rssbase/devtools"]
+  target     = "devtools"
+}
+target "dev-webserver" {
+  contexts = {
+    source-code = "../base/"
+    webserver   = "target:webserver"
+  }
+  dockerfile = "dev.Dockerfile"
+  tags       = ["rssbase/webserver:dev"]
+  target     = "dev-webserver"
+}
+
+# prod
+target "prod-webserver" {
   contexts = {
     source-code = "../base/"
     tools       = "target:tools"
-    web-server  = "target:web-server"
+    webserver   = "target:webserver"
   }
   dockerfile = "prod.Dockerfile"
-  tags       = ["rssbase-prod-web-server"]
-  target     = "prod-web-server"
+  inherits   = ["docker-metadata-action"]
+  tags       = ["rssbase/webserver:prod"]
+  target     = "prod-webserver"
 }

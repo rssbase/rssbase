@@ -15,14 +15,22 @@ BAKE = docker buildx bake
 %:
 	$(BAKE) $@
 
+.PHONY: base
+base:
+	$(BAKE) tools webserver
+
 .PHONY: dev
 dev: ## Build dev docker images
-	$(BAKE) dev-web-server tools
+	$(BAKE) devtools dev-webserver
 
 .PHONY: prod
 prod: ## Build prod docker image
-prod: prod-web-server
+prod: prod-webserver
 
+
+.PHONY: clean
+clean: ## Remove docker images
+	-docker rmi `grep 'tags' docker-bake.hcl | cut -d'"' -f 2`
 
 .DEFAULT_GOAL := help
 help: Makefile

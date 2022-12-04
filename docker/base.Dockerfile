@@ -27,7 +27,7 @@ RUN <<EOF
 EOF
 
 
-FROM php AS web-server
+FROM php AS webserver
 RUN --mount=type=bind,from=mlocati/php-extension-installer,source=/usr/bin/install-php-extensions,target=/usr/local/bin/install-php-extensions <<EOF
   install-php-extensions \
     bcmath \

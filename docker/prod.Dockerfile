@@ -18,7 +18,12 @@ RUN <<EOF
     --no-progress
   composer clear-cache
 EOF
-COPY --link --from=source-code . .
+COPY --link --from=source-code bin       ./bin
+COPY --link --from=source-code config    ./config
+COPY --link --from=source-code public    ./public
+COPY --link --from=source-code src       ./src
+COPY --link --from=source-code templates ./templates
+COPY --link --from=source-code .*        ./
 RUN <<EOF
 set -eux
   composer dump-autoload \
@@ -30,7 +35,7 @@ set -eux
 EOF
 
 
-FROM web-server AS prod-web-server
+FROM webserver AS prod-webserver
 ENV APP_ENV=prod
 COPY --link --from=source-code bin       ./bin
 COPY --link --from=source-code config    ./config

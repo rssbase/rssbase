@@ -1,15 +1,15 @@
 services:
 
-  tools:
-    image: rssbase-tools # cf make build
+  devtools:
+    image: rssbase/devtools # cf make build
     command: sleep 999d
     volumes:
       - ./:/app/
 
-  web-server:
+  webserver:
     extra_hosts:
       - host.docker.internal:host-gateway
-    image: rssbase-dev-web-server # cf make build
+    image: rssbase/webserver:dev # cf make build
     ports:
       # HTTP
       - target: 80

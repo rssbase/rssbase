@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# This file is part of the RssBase project.
+# Copyright (c) Romain Gautier <romain@rssbase.io>
+# This source code is distributed under the terms of both the MIT license and the Apache License (v2.0).
+
+set -eou pipefail
+
+if [ "${1:-}" == '-d' ] || [ "${1:-}" == '--debug' ]; then
+    set -x
+    shift
+fi
+
+DC="docker compose"
+SERVICE="devtools"
+
+# container up and running?
+set +e
+CONTAINER_ID=$($DC ps $SERVICE --quiet 2> /dev/null)
+set -e
+
+if [ "${CONTAINER_ID}" != '' ]; then
+    CONTAINER_STATUS=$(docker inspect --format '{{.State.Status}}' "${CONTAINER_ID}")
+    if [ "${CONTAINER_STATUS}" != "running" ]; then
+        $DC kill $SERVICE
+        $DC rm --force $SERVICE
+        CONTAINER_ID=""
+    fi
+fi
+
+if [ "$CONTAINER_ID" == '' ]; then
+    $DC up --detach $SERVICE &> /dev/null
+fi
+
+if [ $# -eq 0 ]; then
+    ARGS=bash
+else
+    ARGS=$@
+fi
+
+exec $DC exec --workdir /app "${SERVICE}" gosu-wrapper.sh $ARGS

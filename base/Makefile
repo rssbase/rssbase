@@ -10,6 +10,11 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
 DC = docker compose
+DEVTOOLS = bin/dev-tools
+SYMFONY = bin/console
+
+COMPOSER = $(DEVTOOLS) composer
+SF = $(DEVTOOLS) $(SYMFONY)
 
 ##
 ### Project
@@ -27,9 +32,8 @@ start:
 
 .PHONY: install
 install: ## Install project dependencies
-install: vendor
-	composer auto-scripts
-	bin/console cache:warmup
+install: start $(SYMFONY)
+	$(COMPOSER) auto-scripts
 
 .PHONY: clean
 clean: ## Remove generated files
@@ -48,38 +52,40 @@ tests: tu tf
 
 tu: ## Run unit tests
 tu: vendor
-	bin/phpunit --exclude-group functional
+	$(DEVTOOLS) bin/phpunit --exclude-group functional
 
 tf: ## Run functional tests
 tf: vendor
-	bin/phpunit --group functional
+	$(DEVTOOLS) bin/phpunit --group functional
 
 ##
 ### Utils
 
 ecs: ## Run ecs     -- https://github.com/symplify/easy-coding-standard
-	@tools/ecs/bin --fix
+	$(DEV_TOOLS) tools/ecs/bin --fix
 
 phpstan: ## Run phpstan -- https://phpstan.org
-	@tools/phpstan/bin
+	@$(DEV_TOOLS) tools/phpstan/bin
 
 psalm: ## Run psalm   -- https://psalm.dev
-	@tools/psalm/bin
+	@$(DEV_TOOLS) tools/psalm/bin
 
 rector: ## Run rector  -- https://getrector.org
-	@tools/rector/bin -v
+	@$(DEV_TOOLS) tools/rector/bin -v
 
 twigcs: ## Run twigcs  -- https://github.com/friendsoftwig/twigcs
-	@tools/twigcs/bin
+	@$(DEV_TOOLS) tools/twigcs/bin
 
 
 #
 # Logical creation based on files
 #
 
+$(SYMFONY): vendor
+
 vendor: composer.lock
-	composer install --prefer-dist --no-scripts
-	composer dump-autoload --optimize --no-scripts
+	$(COMPOSER) install --prefer-dist --no-scripts
+	$(COMPOSER) dump-autoload --optimize --no-scripts
 	@touch -f $@
 
 .DEFAULT_GOAL := help

@@ -4,8 +4,13 @@
 # Copyright (c) Romain Gautier <romain@rssbase.io>
 # This source code is distributed under the terms of both the MIT license and the Apache License (v2.0).
 
+FROM tools AS devtools
+COPY --link --from=tianon/gosu  /gosu             /bin/
+COPY --link --from=files        ./gosu-wrapper.sh /bin/
+CMD ["bash"]
 
-FROM web-server AS dev-web-server
+
+FROM webserver AS dev-webserver
 COPY --link --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 RUN <<EOF
   install-php-extensions \
